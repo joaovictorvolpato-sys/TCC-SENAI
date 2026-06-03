@@ -1,36 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <link rel="stylesheet" href="../static/inicio.css">
-    <link rel="icon" type="image/x-icon" href="../static/aba.ico">
+    <title>Almoxarifado SENAI</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family: Arial, sans-serif;
+            background-color:#f4f4f4;
+        }
+
+        header{
+            background-color:#003B71;
+            color:white;
+            text-align:center;
+            padding:20px;
+        }
+
+        .container{
+            width:90%;
+            margin:auto;
+            margin-top:40px;
+        }
+
+        .cards{
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            gap:25px;
+        }
+
+        .card{
+            background:white;
+            width:280px;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0px 3px 10px rgba(0,0,0,0.15);
+            text-align:center;
+        }
+
+        .card h2{
+            color:#003B71;
+        }
+
+        .card p{
+            color:#555;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            padding:10px 20px;
+            background:#005CA9;
+            color:white;
+            text-decoration:none;
+            border-radius:5px;
+        }
+
+        .btn:hover{
+            background:#003B71;
+        }
+
+        .resumo{
+            margin-top:40px;
+            display:flex;
+            justify-content:center;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .box{
+            background:white;
+            padding:20px;
+            width:200px;
+            text-align:center;
+            border-radius:10px;
+            box-shadow:0px 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .box h3{
+            color:#003B71;
+            margin:0;
+        }
+
+        .box p{
+            font-size:24px;
+            font-weight:bold;
+        }
+
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
+
+    <header>
+        <h1>Sistema de Almoxarifado Senai</h1>
+        <p>Controle de materiais e estoque</p>
+    </header>
+
+    <div class="container">
+
+        <div class="cards">
+
+            <div class="card">
+                <h2>Itens cadastrados</h2>
+                <p>Cadastro de materiais.</p>
+                <a href="/cadastrar" class="btn">Acessar</a>
+            </div>
+
+            <div class="card">
+                <h2>Adicionar Estoque</h2>
+                <p>Inserir itens ao estoque.</p>
+                <a href="/entrada" class="btn">Acessar</a>
+            </div>
+
+            <div class="card">
+                <h2>Retirar Estoque</h2>
+                <p>Registrar a saída de materiais.</p>
+                <a href="/saida" class="btn">Acessar</a>
+            </div>
+
+        </div>
+
+        <div class="resumo">
+
+            <div class="box">
+                <h3>Itens Cadastrados</h3>
+                <p>30</p>
+            </div>
+
+            <div class="box">
+                <h3>Entradas Hoje</h3>
+                <p>25</p>
+            </div>
+
+            <div class="box">
+                <h3>Saídas Hoje</h3>
+                <p>12</p>
+            </div>
+
+        </div>
+
     </div>
-  </div>
-</nav>
+
 </body>
 </html>

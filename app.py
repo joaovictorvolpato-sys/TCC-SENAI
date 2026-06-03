@@ -12,7 +12,7 @@ def login():
         if usuario == "admin" and senha == "1234":
             return redirect(url_for('inicio'))  
         else:
-            return "Credenciais invalidas"
+            return "Usuário ou senha incorretos!"
 
     return render_template('login.html')  
 
