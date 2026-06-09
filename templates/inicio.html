@@ -7,137 +7,135 @@
     <link rel="icon" type="image/x-icon" href="static/aba.ico">
 
     <style>
-
-        body{
-            margin:0;
+        body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            background-color:#f4f4f4;
+            background-color: #f4f4f4;
         }
 
-        header{
-            background-color:#003B71;
-            color:white;
-            text-align:center;
-            padding:20px;
+        #cabecalho {
+            background-color: #003B71;
+            color: white;
+            text-align: center;
+            padding: 20px;
         }
 
-        .container{
-            width:90%;
-            margin:auto;
-            margin-top:40px;
+        #container-principal {
+            width: 90%;
+            margin: auto;
+            margin-top: 40px;
         }
 
-        .cards{
-            display:flex;
-            justify-content:center;
-            flex-wrap:wrap;
-            gap:25px;
+        #secao-cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
         }
 
-        .card{
-            background:white;
-            width:280px;
-            padding:25px;
-            border-radius:10px;
-            box-shadow:0px 3px 10px rgba(0,0,0,0.15);
-            text-align:center;
+        #card-1, #card-2, #card-3 {
+            background: white;
+            width: 280px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+            text-align: center;
         }
 
-        .card h2{
-            color:#003B71;
+        #card-1 h2, #card-2 h2, #card-3 h2 {
+            color: #003B71;
         }
 
-        .card p{
-            color:#555;
+        #card-1 p, #card-2 p, #card-3 p {
+            color: #555;
         }
 
-        .btn{
-            display:inline-block;
-            margin-top:15px;
-            padding:10px 20px;
-            background:#005CA9;
-            color:white;
-            text-decoration:none;
-            border-radius:5px;
+        #btn-1, #btn-2, #btn-3 {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #005CA9;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
         }
 
-        .btn:hover{
-            background:#003B71;
+        #btn-1:hover, #btn-2:hover, #btn-3:hover {
+            background: #003B71;
         }
 
-        .resumo{
-            margin-top:40px;
-            display:flex;
-            justify-content:center;
-            gap:20px;
-            flex-wrap:wrap;
+        #secao-resumo {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .box{
-            background:white;
-            padding:20px;
-            width:200px;
-            text-align:center;
-            border-radius:10px;
-            box-shadow:0px 3px 10px rgba(0,0,0,0.15);
+        #box-1, #box-2, #box-3 {
+            background: white;
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
         }
 
-        .box h3{
-            color:#003B71;
-            margin:0;
+        #box-1 h3, #box-2 h3, #box-3 h3 {
+            color: #003B71;
+            margin: 0;
         }
 
-        .box p{
-            font-size:24px;
-            font-weight:bold;
+        #box-1 p, #box-2 p, #box-3 p {
+            font-size: 24px;
+            font-weight: bold;
         }
-
     </style>
 </head>
 <body>
 
-    <header>
+    <header id="cabecalho">
         <h1>Sistema de Almoxarifado Senai</h1>
         <p>Controle de materiais e estoque</p>
     </header>
 
-    <div class="container">
+    <div id="container-principal">
 
-        <div class="cards">
+        <div id="secao-cards">
 
-            <div class="card">
+            <div id="card-1">
                 <h2>Itens cadastrados</h2>
                 <p>Cadastro de materiais.</p>
-                <a href="/cadastrar" class="btn">Acessar</a>
+                <a href="/cadastrar" id="btn-1">Acessar</a>
             </div>
 
-            <div class="card">
+            <div id="card-2">
                 <h2>Adicionar Estoque</h2>
                 <p>Inserir itens ao estoque.</p>
-                <a href="/entrada" class="btn">Acessar</a>
+                <a href="/entrada" id="btn-2">Acessar</a>
             </div>
 
-            <div class="card">
+            <div id="card-3">
                 <h2>Retirar Estoque</h2>
                 <p>Registrar a saída de materiais.</p>
-                <a href="/saida" class="btn">Acessar</a>
+                <a href="/saida" id="btn-3">Acessar</a>
             </div>
 
         </div>
 
-        <div class="resumo">
+        <div id="secao-resumo">
 
-            <div class="box">
+            <div id="box-1">
                 <h3>Itens Cadastrados</h3>
                 <p>30</p>
             </div>
 
-            <div class="box">
+            <div id="box-2">
                 <h3>Entradas Hoje</h3>
                 <p>25</p>
             </div>
 
-            <div class="box">
+            <div id="box-3">
                 <h3>Saídas Hoje</h3>
                 <p>12</p>
             </div>
