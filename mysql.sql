@@ -1,16 +1,21 @@
-CREATE DATABASE usuários
+CREATE DATABASE almoxarifado;
 
-USE usuários
+USE almoxarifado;
 
-CREATE TABLE usuários (
-login VARCHAR(100) NOT NULL,
-senha VARCHAR(100) NOT NULL
-);
+CREATE TABLE estoque (
+	id INT PRIMARY KEY auto_increment,
+    nome VARCHAR(255),
+    qtde INT,
+    estoque_minimo INT,
+    descriao VARCHAR(255),
+    preco DECIMAL,
+    foto VARCHAR(255),
+    categoria VARCHAR(255)
+    );
 
-SELECT * FROM usuários
-
-INSERT INTO usuários (login, senha)
-VALUES ('admin', '1234');
-
-INSERT INTO usuários (login, senha)
-VALUES ('useários', '5678')
+CREATE TABLE usuarios (
+	id INT PRIMARY KEY auto_increment,
+    usuario VARCHAR(255),
+    senha VARCHAR(255),
+    funcao VARCHAR(10)
+    );

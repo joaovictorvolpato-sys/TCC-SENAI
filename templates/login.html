@@ -6,6 +6,16 @@
     <title>Login</title>
     <link rel="stylesheet" href="static/login.css">
     <link rel="icon" type="image/x-icon" href="static/aba.ico">
+    <script>function toggleSenha() {
+            const campoSenha = document.getElementById("inputcaixasenha");
+            
+            // Verifica se o tipo atual é password
+            if (campoSenha.type === "password") {
+                campoSenha.type = "text"; // Exibe o texto
+            } else {
+                campoSenha.type = "password"; // Esconde a senha
+            }
+        }</script>
 </head>
 <body id="corpo">
    
@@ -22,9 +32,9 @@
         </div>
         <div id="caixasenha">
             <input id="inputcaixasenha" name="password" type="password" placeholder="Digite sua senha"></input>
+            <button id="olhinho" type="button" onclick="toggleSenha()">👁️</button>
         </div>
 
-        <button id="esqueci" type="button">Esqueci a senha!</button>
         <button id="entrar" type="submit">Entrar</button>
     </form>
 </body>

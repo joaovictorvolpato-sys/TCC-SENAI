@@ -20,10 +20,18 @@ def login():
 def inicio():
     return render_template('inicio.html')  
 
+@app.route('/estoque')
+def estoque():
+    return render_template('estoque.html') 
+
+@app.route('/retirar')
+def retirar():
+    return render_template('retirar.html')
+
 @app.route('/conexao')
 def conexao():
     conexao = mysql.connector.connect(
-    host='0.0.0.0',
+    host='localhost',
     username='root',
     password='',
     port=3306,

@@ -62,35 +62,11 @@
     vertical-align: middle;
 }
 
-#esqueci{
-    position:absolute;
-    width:200px;
-    height:30px;
-    top: 710px;
-    left: 850px;
-    background-color: #1e79aa;
-    color: white;
-    border-radius: 8px;
-    border: none;
-}
-
-#esqueci:active{
-    position:absolute;
-    width:200px;
-    height:30px;
-    top: 710px;
-    left: 850px;
-    background-color: #4e96bd;
-    color: white;
-    border-radius: 8px;
-    border: none;
-}
-
 #entrar{
      position:absolute;
     width:250px;
     height:80px;
-    top: 760px;
+    top: 730px;
     left: 825px;
     background-color: #005281;
     color: white;
@@ -136,3 +112,9 @@
     font-size: 20px;
     vertical-align: middle;
 }
+
+#olhinho{
+    position: relative;
+    left: 450px;
+    top: 0px;
+}   
