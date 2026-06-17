@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+#cabecalho {
+    background-color: #005281;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+#container-principal {
+    width: 90%;
+    margin: auto;
+    margin-top: 40px;
+}
+
+#secao-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+#card-1, #card-2, #card-3 {
+    background: white;
+    width: 280px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+#card-1 h2, #card-2 h2, #card-3 h2 {
+    color: #003B71;
+}
+
+#card-1 p, #card-2 p, #card-3 p {
+    color: #555;
+}
+
+#btn-1, #btn-2, #btn-3 {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #005CA9;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+#btn-1:hover, #btn-2:hover, #btn-3:hover {
+    background: #003B71;
+}
+
+#secao-resumo {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#box-1, #box-2, #box-3 {
+    background: white;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+}
+
+#box-1 h3, #box-2 h3, #box-3 h3 {
+    color: #003B71;
+    margin: 0;
+}
+
+#box-1 p, #box-2 p, #box-3 p {
+    font-size: 24px;
+    font-weight: bold;
+}
