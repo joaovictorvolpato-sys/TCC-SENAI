@@ -1,5 +1,7 @@
 #corpo{
     background-color: #005281;
+    color: #005281;
+    font-family: Arial, sans-serif
 }
 
 #imagem{
@@ -30,7 +32,7 @@
     height:450px;
     top: 410px;
     left: 620px;
-    background-color: #d6e1e7;
+    background-color: white;
      border-radius: 8px;
 }
 
