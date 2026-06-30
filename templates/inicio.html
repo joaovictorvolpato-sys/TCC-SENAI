@@ -6,6 +6,7 @@
     <title>Almoxarifado SENAI</title>
     <link rel="stylesheet" href="static/inicio.css">
     <link rel="icon" type="image/x-icon" href="static/aba.ico">
+
    
 </head>
 <body>
@@ -33,26 +34,41 @@
 
         </div>
 </form>
-        <div id="secao-resumo">
 
-            <div id="box-1">
-                <h3>Itens Cadastrados</h3>
-                <p>30</p>
-            </div>
 
-            <div id="box-2">
-                <h3>Entradas Hoje</h3>
-                <p>25</p>
-            </div>
-
-            <div id="box-3">
-                <h3>Saídas Hoje</h3>
-                <p>12</p>
-            </div>
-
-        </div>
-
-    </div>
+<div>
+    <h1>Controle de Estoque</h1>
+    <table>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Imagem</th>
+        </tr>
+        <tr>
+            <td>teste</td>
+            <td>10</td>
+            <td>R$ 99</td>
+            <td><button class="btn-imagem" onclick="mostrarImagem('teste 1')">Ver</button></td>
+        </tr>
+        <tr>
+            <td>teste</td>
+            <td>10</td>
+            <td>R$ 99</td>
+            <td><button class="btn-imagem" onclick="mostrarImagem('teste 2')">Ver</button></td>
+        </tr>
+       <tr>
+    <td>teste</td>
+    <td>10</td>
+    <td>R$ 99</td>
+    <td>
+        <button onclick="Swal.fire({ imageUrl: 'https://placeholder.pics/svg/300x1500', imageHeight: 400, imageAlt: 'A tall image' });">
+            Ver
+        </button>
+    </td>
+</tr>
+    </table>
+</div>
 
 </body>
 </html>
