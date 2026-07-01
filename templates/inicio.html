@@ -9,7 +9,7 @@
 
    
 </head>
-<body>
+<body style="padding: 0";>
 
     <header id="cabecalho">
         <h1>Sistema de Almoxarifado Senai</h1>
@@ -28,7 +28,7 @@
 
             <div id="card-3">
                 <h2>Retirar Estoque</h2>
-                <p>Registrar a saída de materiais.</p>
+                <p>Registrar saídas do estoque.</p>
                 <a href="/retirar" id="btn-3">Acessar</a>
             </div>
 
@@ -49,20 +49,20 @@
             <td>teste</td>
             <td>10</td>
             <td>R$ 99</td>
-            <td><button class="btn-imagem" onclick="mostrarImagem('teste 1')">Ver</button></td>
+            <td><button id="botao1" class="btn-imagem" onclick="mostrarImagem('teste 1')">Ver</button></td>
         </tr>
         <tr>
             <td>teste</td>
             <td>10</td>
             <td>R$ 99</td>
-            <td><button class="btn-imagem" onclick="mostrarImagem('teste 2')">Ver</button></td>
+            <td><button id="botao2" class="btn-imagem" onclick="mostrarImagem('teste 2')">Ver</button></td>
         </tr>
        <tr>
     <td>teste</td>
     <td>10</td>
     <td>R$ 99</td>
     <td>
-        <button onclick="Swal.fire({ imageUrl: 'https://placeholder.pics/svg/300x1500', imageHeight: 400, imageAlt: 'A tall image' });">
+        <button id="botao3" onclick="Swal.fire({ imageUrl: 'https://placeholder.pics/svg/300x1500', imageHeight: 400, imageAlt: 'A tall image' });">
             Ver
         </button>
     </td>

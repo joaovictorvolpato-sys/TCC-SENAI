@@ -7,13 +7,7 @@ body {
     background-color: #f8f9fa; 
 }
 
-#form {
-    width: 100%;
-    max-width: 600px; 
-    padding: 20px;
-}
-
-#topo {
+#cabecalho {
     background-color: #005281;
     color: white;
     text-align: center;
@@ -23,4 +17,52 @@ body {
     left: 0;         
     width: 100%;     
     z-index: 1000;   
+}
+
+#nome_item{
+    background-color: white; 
+    color: black; 
+    border-color: rgb(199, 193, 193);
+    width: 500px;
+}
+
+#categoria{
+    background-color: white; 
+    color: black; 
+    border-color: rgb(199, 193, 193);
+    width: 500px;
+}
+
+#funcao{
+    background-color: white; 
+    color: black; 
+    border-color: rgb(199, 193, 193);
+    width: 500px;
+}
+
+#quantidade{
+    background-color: white; 
+    color: black; 
+    border-color: rgb(199, 193, 193);
+    width: 500px;
+}
+
+#valor{
+    background-color: white; 
+    color: black; 
+    border-color: rgb(199, 193, 193);
+    width: 500px;
+}
+
+#link_foto{
+    background-color: white; 
+    color: black; 
+    border-color: rgb(199, 193, 193);
+    width: 500px;
+}
+
+#botao_cadastro{
+    background-color: #005281;
+    border-color: #005281;
+
 }
