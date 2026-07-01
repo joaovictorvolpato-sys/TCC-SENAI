@@ -3,6 +3,16 @@ import mysql.connector
 
 app = Flask(__name__)
 
+
+def obter_conexao():
+    return mysql.connector.connect(
+        host='localhost',
+        port=3306,
+        user='root',       
+        password='',
+        database='almoxarifado'
+    )
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -28,16 +38,43 @@ def estoque():
 def retirar():
     return render_template('retirar.html')
 
+@app.route('/cadastro_concluido', methods=['POST'])
+def cadastrar():
+    nome = request.form.get('nome')
+    categoria = request.form.get('categoria')
+    funcao = request.form.get('funcao')
+    quantidade = request.form.get('quantidade')
+    valor = request.form.get('valor')
+    foto = request.form.get('foto')
+
+    banco = obter_conexao()
+    cursor = banco.cursor()
+
+    query = """
+        INSERT INTO estoque (nome, categoria, funcao, quantidade, valor, foto) 
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    valores = (nome, categoria, funcao, quantidade, valor, foto)
+    
+    cursor.execute(query, valores)
+    banco.commit() 
+    
+    cursor.close()
+    banco.close()
+
+    return render_template('cadastro_concluido.html') 
+
 @app.route('/conexao')
 def conexao():
-    conexao = mysql.connector.connect(
-    host='localhost',
-    username='root',
-    password='',
-    port=3306,
-    database='conexao')
-
+    conexao_teste = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='',
+        port=3306,
+        database='conexao'
+    )
+    conexao_teste.close()
     return render_template('login.html') 
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')

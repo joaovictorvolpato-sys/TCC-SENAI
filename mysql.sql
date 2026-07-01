@@ -5,12 +5,11 @@ USE almoxarifado;
 CREATE TABLE estoque (
 	id INT PRIMARY KEY auto_increment,
     nome VARCHAR(255),
-    qtde INT,
-    estoque_minimo INT,
-    descriao VARCHAR(255),
-    preco DECIMAL,
-    foto VARCHAR(255),
-    categoria VARCHAR(255)
+    categoria VARCHAR(255),
+    funcao VARCHAR(255),
+    quantidade INT,
+    valor DECIMAL,
+	foto VARCHAR(255),
     );
 
 CREATE TABLE usuarios (
@@ -19,3 +18,8 @@ CREATE TABLE usuarios (
     senha VARCHAR(255),
     funcao VARCHAR(10)
     );
+    
+INSERT INTO estoque(nome, categoria, funcao, quantidade, valor, foto)
+VALUES ('teste', 'teste', 'teste', 10, 10, 'linkdeteste') ; 
+
+SELECT * FROM estoque;
