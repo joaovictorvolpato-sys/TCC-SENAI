@@ -9,7 +9,7 @@ CREATE TABLE estoque (
     funcao VARCHAR(255),
     quantidade INT,
     valor DECIMAL,
-	foto VARCHAR(255),
+	foto VARCHAR(255)
     );
 
 CREATE TABLE usuarios (

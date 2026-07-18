@@ -17,46 +17,47 @@
     </header>
 
     <div id="formulario_retirar">
+
         <form action="/cadastro_concluido.html" method="POST">
+
+           <form id="Quadro" method="POST">
+              <select id="retire" name="operacao">
+                <option selected value="Entrada">Entrada</option>
+                <option value="Saida">Saída</option>
+            </select>
+
 
   <div class="col-md-6">
     <label for="inputEmail4" class="form-label">Nome do Item</label>
-    <input type="text" class="form-control" id="nome_item">
+    <input type="text" name="nomeItem" class="form-control" id="nome_item">
   </div>
 
   <div class="col-md-6">
     <label for="inputCity" class="form-label">Categoria</label>
-    <input type="text" class="form-control" id="categoria">
+    <input type="text" name="categoria" class="form-control" id="categoria">
   </div>
 
   <div class="col-12">
     <label for="inputAddress" class="form-label">Função</label>
-    <input type="text" class="form-control" id="funcao">
+    <input type="text" name="funcao" class="form-control" id="funcao">
   </div>
   <div class="col-12">
     <label for="inputAddress2" class="form-label">Quantidade</label>
-    <input type="text" class="form-control" id="quantidade">
+    <input type="text" name="quantidade" class="form-control" id="quantidade">
   </div>
 
   <div class="col-md-6">
     <label for="inputCity" class="form-label">Valor</label>
-    <input type="text" class="form-control" id="valor">
+    <input type="text" name="valor" class="form-control" id="valor">
   </div>
 
   <div class="col-12">
-
-    <div class="mb-3">
-  <label for="basic-url" class="form-label">Link da Foto</label>
-  <div class="input-group">
-    <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
-    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4" id="link_foto">
-  </div>
     
   <br>
 
   </div>
   <div class="col-12">
-    <button  id="botao_cadastro" type="submit" class="btn btn-primary">Cadastrar</button>
+    <button  id="botao_cadastro" type="submit" class="btn btn-primary">Movimentar</button>
   </div>
 
 </form>

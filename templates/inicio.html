@@ -35,40 +35,19 @@
         </div>
 </form>
 
-
-<div>
-    <h1>Controle de Estoque</h1>
-    <table>
-        <tr>
-            <th>Produto</th>
-            <th>Quantidade</th>
-            <th>Preço</th>
-            <th>Imagem</th>
-        </tr>
-        <tr>
-            <td>teste</td>
-            <td>10</td>
-            <td>R$ 99</td>
-            <td><button id="botao1" class="btn-imagem" onclick="mostrarImagem('teste 1')">Ver</button></td>
-        </tr>
-        <tr>
-            <td>teste</td>
-            <td>10</td>
-            <td>R$ 99</td>
-            <td><button id="botao2" class="btn-imagem" onclick="mostrarImagem('teste 2')">Ver</button></td>
-        </tr>
-       <tr>
-    <td>teste</td>
-    <td>10</td>
-    <td>R$ 99</td>
-    <td>
-        <button id="botao3" onclick="Swal.fire({ imageUrl: 'https://placeholder.pics/svg/300x1500', imageHeight: 400, imageAlt: 'A tall image' });">
-            Ver
-        </button>
-    </td>
-</tr>
-    </table>
-</div>
+<div id="caixa-tabela">
+        <table id="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Funcao</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Foto</th>
+          </tr>
+        </thead>
+        <tbody>
 
 </body>
 </html>
