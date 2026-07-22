@@ -6,24 +6,22 @@
     <title>Almoxarifado SENAI</title>
     <link rel="stylesheet" href="static/inicio.css">
     <link rel="icon" type="image/x-icon" href="static/aba.ico">
-
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.all.min.js"></script>
 </head>
-<body style="padding: 0";>
+<body style="padding: 0;">
 
     <header id="cabecalho">
         <h1>Sistema de Almoxarifado Senai</h1>
         <p>Controle de materiais e estoque</p>
     </header>
-<form action="/" method="POST">
-    <div id="container-principal">
 
+    <div id="container-principal">
         <div id="secao-cards">
 
             <div id="card-2">
                 <h2>Adicionar Estoque</h2>
                 <p>Inserir itens ao estoque.</p>
-                <a href="/estoque" id="btn-2">Acessar</a>
+                <a href="/adicionar_estoque" id="btn-2">Acessar</a>
             </div>
 
             <div id="card-3">
@@ -33,21 +31,44 @@
             </div>
 
         </div>
-</form>
+    </div>
 
-<div id="caixa-tabela">
+    <div id="caixa-tabela">
         <table id="table">
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Categoria</th>
-            <th scope="col">Funcao</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Foto</th>
-          </tr>
-        </thead>
-        <tbody>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Funcao</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Foto</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in resultado %}
+                <tr>
+                    <th scope="row">{{ item[0] }}</th>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td><button onclick="mostrar_foto('{{ item[6] }}')">Foto</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function mostrar_foto(arg) {
+            Swal.fire({
+                imageUrl: arg
+            });
+        }
+    </script>
 
 </body>
 </html>
