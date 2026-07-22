@@ -23,3 +23,6 @@ INSERT INTO estoque(nome, categoria, funcao, quantidade, valor, foto)
 VALUES ('teste', 'teste', 'teste', 10, 10, 'linkdeteste') ; 
 
 SELECT * FROM estoque;
+SELECT * FROM usuarios;
+DELETE FROM estoque 
+WHERE id = 3;
