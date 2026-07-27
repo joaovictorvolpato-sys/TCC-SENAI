@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Almoxarifado SENAI</title>
-    <link rel="stylesheet" href="static/inicio.css">
     <link rel="icon" type="image/x-icon" href="static/aba.ico">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="static/inicio.css">
 </head>
 <body style="padding: 0;">
 
@@ -28,6 +28,12 @@
                 <h2>Retirar Estoque</h2>
                 <p>Registrar saídas do estoque.</p>
                 <a href="/retirar" id="btn-3">Acessar</a>
+            </div>
+
+            <div id="card-4">
+                <h2>Cadastrar Usuario</h2>
+                <p>Cadastre um novo usuario.</p>
+                <a href="/usuarios" id="btn-4">Acessar</a>
             </div>
 
         </div>
@@ -55,20 +61,22 @@
                     <td>{{ item[3] }}</td>
                     <td>{{ item[4] }}</td>
                     <td>{{ item[5] }}</td>
-                    <td><button onclick="mostrar_foto('{{ item[6] }}')">Foto</button></td>
-                </tr>
+                    <td>
+                        {% if item[6] %}
+                    <button onclick="mostrar_foto('{{ url_for('static', filename=item[6])}}')">Foto</button>
+                        {% else %}
+                    <span>Sem foto</span>
+                        {% endif %}
+                    </td>
+
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <script>
-        function mostrar_foto(arg) {
-            Swal.fire({
-                imageUrl: arg
-            });
-        }
-    </script>
-
+<script>
+    function mostrar_foto(arg){
+      console.log("Valor recebido:", arg);
+      Swal.fire({
+        imageUrl: arg
+      });
+    }
+</script>
 </body>
 </html>

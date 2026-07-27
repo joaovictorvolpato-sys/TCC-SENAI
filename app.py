@@ -9,10 +9,9 @@ def obter_conexao():
         host='localhost',
         port=3306,
         user='root',
-        password='Root',
+        password='',
         database='almoxarifado'
     )
-
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -115,6 +114,9 @@ def retirar():
 
     return render_template('retirar.html')
 
+@app.route('/usuarios', methods=['POST', 'GET'])
+def usuarios():
+    return render_template('usuarios.html')
 
 @app.route('/conexao')
 def conexao():
