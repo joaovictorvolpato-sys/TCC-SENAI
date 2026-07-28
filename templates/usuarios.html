@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Usuário</title>
-    <link rel="stylesheet" href="static/inicio.css">
+    <link rel="stylesheet" href="static/usuarios.css">
+    <link rel="icon" type="image/x-icon" href="static/aba.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
 </head>
 <body>
-    
+    <header id="cabecalho">
+        <h1>Adicionar Usuários</h1>
+        <p>Controle de usuários</p>
+    </header>
+
+    <div id="formulario_retirar">
+
+        <form id="Quadro" action="/retirar" method="POST">
+
+            <select id="tipo" name="operacao">
+                <option selected value="Entrada">Administrador</option>
+                <option value="Saida">Usuário</option>
+            </select>
+
+            <div class="col-md-6">
+                <label for="nome_item" class="form-label">Usuário</label>
+                <input type="text" name="nomeItem" class="form-control" id="usuario">
+            </div>
+
+            <div class="col-md-6">
+                <label for="categoria" class="form-label">Senha</label>
+                <input type="text" name="categoria" class="form-control" id="senha">
+            </div>
+
+            <br>
+
+            <div class="col-12">
+                <button id="botao_cadastro" type="submit" class="btn btn-primary">Cadastrar</button>
+            </div>
+
+        </form>
+    </div>
 </body>
 </html>

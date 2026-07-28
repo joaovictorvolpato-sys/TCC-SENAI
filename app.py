@@ -116,6 +116,29 @@ def retirar():
 
 @app.route('/usuarios', methods=['POST', 'GET'])
 def usuarios():
+
+    if request.method == 'POST':
+       nome = request.form.get('usuario')
+       senha = request.form.get('senha')
+       tipo = request.form.get('tipo', 'user')
+
+       try:
+           conexao_bd = obter_conexao()
+           cursor = conexao_bd.cursor()
+
+           comando = "INSERT INTO usuarios (nome, senha, funcao) VALUES (%s, %s, %s)"
+           valores = (nome, senha, funcao)
+           cursor.execute(comando, valores)
+           conexao_bd.commit()
+
+           cursor.close()
+           conexao_bd.close()
+
+           return redirect(url_for('usuarios'))
+
+       except mysql.connector.Error as erro:
+           return f"Erro ao cadastrar o usuário: {erro}"
+
     return render_template('usuarios.html')
 
 @app.route('/conexao')
