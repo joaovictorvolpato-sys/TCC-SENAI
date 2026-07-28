@@ -24,7 +24,7 @@ body {
     gap: 25px;
 }
 
-#card-1, #card-2, #card-3 {
+#card-1, #card-2, #card-3, #card-4 {
     background: white;
     width: 280px;
     padding: 25px;
@@ -33,15 +33,15 @@ body {
     text-align: center;
 }
 
-#card-1 h2, #card-2 h2, #card-3 h2 {
+#card-1 h2, #card-2 h2, #card-3 h2, #card-4 h2 {
     color: #003B71;
 }
 
-#card-1 p, #card-2 p, #card-3 p {
+#card-1 p, #card-2 p, #card-3 p, #card-4 p {
     color: #555;
 }
 
-#btn-1, #btn-2, #btn-3 {
+#btn-1, #btn-2, #btn-3, #btn-4 {
     display: inline-block;
     margin-top: 15px;
     padding: 10px 20px;
