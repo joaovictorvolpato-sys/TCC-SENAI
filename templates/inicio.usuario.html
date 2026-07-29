@@ -29,7 +29,7 @@
                 <p>Registrar saídas do estoque.</p>
                 <a href="/retirar" id="btn-3">Acessar</a>
             </div>
-            
+
         </div>
     </div>
 
@@ -49,23 +49,25 @@
               </tr>
             </thead>
             <tbody>
-                {% for item in resultado %}
+                {% for item in itens %}
                 <tr>
-                    <th scope="row">{{ item[0] }}</th>
-                    <td>{{ item[1] }}</td>
-                    <td>{{ item[2] }}</td>
-                    <td>{{ item[3] }}</td>
-                    <td>{{ item[4] }}</td>
-                    <td>{{ item[5] }}</td>
-                    <td>
-                        {% if item[6] %}
-                    <button onclick="mostrar_foto('{{ url_for('static', filename=item[6])}}')">Foto</button>
-                        {% else %}
-                    <span>Sem foto</span>
-                        {% endif %}
-                    </td>
-
+    <!-- Troque os números pelos nomes das colunas entre aspas simples -->
+                <th scope="row">{{ item['id'] }}</th>
+                <td>{{ item['nome'] }}</td>
+                <td>{{ item['categoria'] }}</td>
+                <td>{{ item['funcao'] }}</td>
+                <td>{{ item['quantidade'] }}</td>
+                <td>{{ item['valor'] }}</td>
+                <td>
+                {% if item['foto'] %}
+            <button onclick="mostrar_foto('{{ url_for('static', filename=item['foto']) }}')">Foto</button>
+                {% else %}
+            <span>Sem foto</span>
+                {% endif %}
+    </td>
+</tr>
                 {% endfor %}
+                
 <script>
     function mostrar_foto(arg){
       console.log("Valor recebido:", arg);

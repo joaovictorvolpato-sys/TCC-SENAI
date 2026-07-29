@@ -55,19 +55,59 @@ def login():
     return render_template('login.html')
 
 
-# 🔐 Rota do Admin (Abre a página inicio.html)
 @app.route('/inicio')
 def inicio_admin():
+    # 1. Trava de segurança da sessão
     if 'usuario' in session and session.get('funcao') in ['Administrador', 'admin']:
-        return render_template('inicio.html')
+        try:
+            # 2. Conecta ao banco para buscar os itens do estoque
+            conexao_bd = obter_conexao()
+            cursor = conexao_bd.cursor(dictionary=True) # Importante: dictionary=True para o HTML ler os nomes das colunas
+            
+            comando_sql = "SELECT id, nome, categoria, funcao, quantidade, valor, foto FROM estoque"
+            cursor.execute(comando_sql)
+            itens_estoque = cursor.fetchall() # Guarda todos os itens cadastrados nesta lista
+
+            cursor.close()
+            conexao_bd.close()
+
+            # 3. Envia a lista de itens para dentro do arquivo inicio.html
+            return render_template('inicio.html', itens=itens_estoque)
+
+        except mysql.connector.Error as erro:
+            return f"Erro ao carregar o estoque: {erro}"
+            
+    # Se não tiver permissão ou não estiver logado, expulsa para o login
     return redirect(url_for('login'))
 
 
-# 🔐 Rota do Usuário Comum (Abre a página inicio.usuario.html)
+
+
 @app.route('/inicio-usuario')
 def inicio_usuario():
+    # 1. Verifica se o usuário comum está realmente logado
     if 'usuario' in session:
-        return render_template('inicio.usuario.html')
+        try:
+            conexao_bd = obter_conexao()
+            
+            # ATENÇÃO: Se no seu HTML você usa os números (item[1], item[2]), deixe os parênteses do cursor VAZIOS: cursor = conexao_bd.cursor()
+            # Se no seu HTML você usa os nomes das colunas (item['nome']), deixe como está abaixo:
+            cursor = conexao_bd.cursor(dictionary=True) 
+            
+            # 2. Puxa os dados atualizados do estoque no MySQL
+            comando_sql = "SELECT id, nome, categoria, funcao, quantidade, valor, foto FROM estoque"
+            cursor.execute(comando_sql)
+            itens_estoque = cursor.fetchall()
+
+            cursor.close()
+            conexao_bd.close()
+
+            # 3. Envia os dados para a página do usuário comum com o nome 'itens'
+            return render_template('inicio.usuario.html', itens=itens_estoque)
+
+        except mysql.connector.Error as erro:
+            return f"Erro ao carregar o estoque do usuário: {erro}"
+            
     return redirect(url_for('login'))
 
 
@@ -103,46 +143,58 @@ def cadastrar_item():
         cursor.close()
         conexao_bd.close()
 
-        return redirect(url_for('inicio'))
+        # 🔀 CORREÇÃO DINÂMICA: Verifica quem cadastrou para mandar para a tela certa
+        if 'funcao' in session and session.get('funcao') in ['Administrador', 'admin']:
+            return redirect(url_for('inicio_admin')) # Se for admin, vai para inicio.html
+        else:
+            return redirect(url_for('inicio_usuario')) # Se for usuário comum, vai para inicio.usuario.html
 
     except mysql.connector.Error as erro:
         return f"Erro ao cadastrar item: {erro}"
 
-
 @app.route('/retirar', methods=['GET', 'POST'])
 def retirar():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
-        operacao = request.form.get('operacao')
+        # 1. Captura os dados do formulário HTML
+        operacao = request.form.get('operacao') # Recebe 'Entrada' ou 'Saida'
         nome = request.form.get('nomeItem')
-        categoria = request.form.get('categoria')
-        quantidade = request.form.get('quantidade')
-        funcao = request.form.get('funcao')
-      
+        quantidade = int(request.form.get('quantidade')) # Converte para número inteiro para fazer o cálculo
 
         try:
             conexao_bd = obter_conexao()
             cursor = conexao_bd.cursor()
-
-            if operacao == 'Saida':
-                comando = "UPDATE estoque SET quantidade = quantidade - %s WHERE nome = %s"
-                valores = (quantidade, nome)
-                cursor.execute(comando, valores)
-
+            
+            # 2. DECISÃO DINÂMICA: Define se vai SOMAR ou SUBTRAIR no banco de dados
             if operacao == 'Entrada':
+                # Soma a nova quantidade à quantidade que já existe no banco
                 comando = "UPDATE estoque SET quantidade = quantidade + %s WHERE nome = %s"
-                valores = (quantidade, nome)
-                cursor.execute(comando, valores)
+            else:
+                # 💻 CORREÇÃO: Trocado 'quantity' por 'quantidade' (em português)
+                comando = "UPDATE estoque SET quantidade = quantidade - %s WHERE nome = %s"
 
+
+            # 3. Executa o comando no MySQL
+            cursor.execute(comando, (quantidade, nome))
             conexao_bd.commit()
+
             cursor.close()
             conexao_bd.close()
 
-            return redirect(url_for('inicio'))  # <-- corrigido: nome de função certo
+            # 4. Redireciona o usuário para a página correta com base no cargo dele
+            if session.get('funcao') in ['Administrador', 'admin']:
+                return redirect(url_for('inicio_admin')) 
+            else:
+                return redirect(url_for('inicio_usuario')) 
 
         except mysql.connector.Error as erro:
-            return f"Erro ao registrar a retirada: {erro}"
+            return f"Erro ao atualizar o estoque: {erro}"
 
+    # Carrega a página HTML do formulário quando o usuário clica para entrar
     return render_template('retirar.html')
+
 
 @app.route('/usuarios', methods=['POST', 'GET'])
 def usuarios():
