@@ -1,0 +1,163 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+#cabecalho {
+    background-color: #005281;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+#container-principal {
+    width: 90%;
+    margin: auto;
+    margin-top: 40px;
+}
+
+#secao-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+#card-1, #card-2, #card-3, #card-4 {
+    background: white;
+    width: 280px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+#card-1 h2, #card-2 h2, #card-3 h2, #card-4 h2 {
+    color: #003B71;
+}
+
+#card-1 p, #card-2 p, #card-3 p, #card-4 p {
+    color: #555;
+}
+
+#btn-1, #btn-2, #btn-3, #btn-4 {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #005281;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+#btn-1:hover, #btn-2:hover, #btn-3:hover {
+    background: #005281;
+}
+
+#secao-resumo {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#box-1, #box-2, #box-3 {
+    background: white;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+}
+
+#box-1 h3, #box-2 h3, #box-3 h3 {
+    color: #003B71;
+    margin: 0;
+}
+
+#box-1 p, #box-2 p, #box-3 p {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color:#f4f4f4
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 70%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #005281;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #005281;
+    color: white;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #005281;
+    padding: 30px;
+}
+
+table {
+    border-collapse: collapse;
+    background-color: #fff;
+    color: black;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+th, td {
+    border: 1px solid #005281;
+    padding: 10px 16px;
+    text-align: left;
+}
+
+th {
+    background: #005281;
+    color: white;
+    
+}
+
+#botao1 {
+    font-family: Arial, sans-serif;
+    background-color: #005281; 
+    color: white; 
+    border: #005281;
+    width: 50px;
+    border-radius: 5px;
+}
+
+#botao2 {
+    font-family: Arial, sans-serif;
+    background-color: #005281; 
+    color: white; 
+    border: #005281;
+    width: 50px;
+    border-radius: 5px;
+}
+
+#botao3 {
+    font-family: Arial, sans-serif;
+    background-color: #005281; 
+    color: white; 
+    border: #005281;
+    width: 50px;
+    border-radius: 5px;
+}

@@ -15,23 +15,23 @@
         <p>Controle de usuários</p>
     </header>
 
-    <div id="formulario_retirar">
+    <div id="formulario_usuarios">
 
-        <form id="Quadro" action="/retirar" method="POST">
+        <form id="Quadro" action="/usuarios" method="POST">
 
-            <select id="tipo" name="operacao">
-                <option selected value="Entrada">Administrador</option>
-                <option value="Saida">Usuário</option>
+            <select id="funcao" name="funcao">  
+                <option selected value="admin">Administrador</option>
+                <option value="usuario">Usuário</option>
             </select>
 
             <div class="col-md-6">
                 <label for="nome_item" class="form-label">Usuário</label>
-                <input type="text" name="nomeItem" class="form-control" id="usuario">
+                <input type="text" name="usuario" class="form-control" id="usuario">
             </div>
 
             <div class="col-md-6">
                 <label for="categoria" class="form-label">Senha</label>
-                <input type="text" name="categoria" class="form-control" id="senha">
+                <input type="password" name="senha" class="form-control" id="senha">
             </div>
 
             <br>

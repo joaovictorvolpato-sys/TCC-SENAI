@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 
 app = Flask(__name__)
-
+app.secret_key = 'TCC_SENAI' 
 
 def obter_conexao():
     return mysql.connector.connect(
@@ -16,30 +16,60 @@ def obter_conexao():
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        usuario = request.form.get('username')
-        senha = request.form.get('password')
+        usuario_digitado = request.form.get('username')
+        senha_digitada = request.form.get('password')
 
-        if usuario == "admin" and senha == "1234":
-            return redirect(url_for('inicio'))
-        else:
+        try:
+            conexao_bd = obter_conexao()
+            cursor = conexao_bd.cursor(dictionary=True) 
+
+            # Busca o usuário na tabela
+            comando = "SELECT usuario, senha, funcao FROM usuarios WHERE usuario = %s"
+            cursor.execute(comando, (usuario_digitado,))
+            usuario_encontrado = cursor.fetchone()
+
+            cursor.close()
+            conexao_bd.close()
+
+            # CORREÇÃO: Toda a validação só acontece se 'usuario_encontrado' NÃO for None
+            if usuario_encontrado is not None:
+                
+                # Só tenta acessar o dicionário ['senha'] se o usuário existir
+                if usuario_encontrado['senha'] == senha_digitada:
+                    
+                    session['usuario'] = usuario_encontrado['usuario']
+                    session['funcao'] = usuario_encontrado['funcao']
+
+                    # 🔀 REDIRECIONAMENTO CORRIGIDO E LIMPO:
+                    if usuario_encontrado['funcao'] in ['Administrador', 'admin']:
+                        return redirect(url_for('inicio_admin'))  # Vai para a def inicio_admin() -> abre inicio.html
+                    else:
+                        return redirect(url_for('inicio_usuario'))
+
+            # Se o usuário for None OU se a senha estiver errada, cai aqui com segurança
             return "Usuário ou senha incorretos!"
+
+        except mysql.connector.Error as erro:
+            return f"Erro no banco de dados: {erro}"
 
     return render_template('login.html')
 
 
+# 🔐 Rota do Admin (Abre a página inicio.html)
 @app.route('/inicio')
-def inicio():
-    try:
-        conexao_bd = obter_conexao()
-        cursor = conexao_bd.cursor()
-        cursor.execute("SELECT * FROM estoque")
-        resultado = cursor.fetchall()
-        cursor.close()
-        conexao_bd.close()
-    except mysql.connector.Error as erro:
-        return f"Erro ao buscar itens do estoque: {erro}"
+def inicio_admin():
+    if 'usuario' in session and session.get('funcao') in ['Administrador', 'admin']:
+        return render_template('inicio.html')
+    return redirect(url_for('login'))
 
-    return render_template('inicio.html', resultado=resultado)
+
+# 🔐 Rota do Usuário Comum (Abre a página inicio.usuario.html)
+@app.route('/inicio-usuario')
+def inicio_usuario():
+    if 'usuario' in session:
+        return render_template('inicio.usuario.html')
+    return redirect(url_for('login'))
+
 
 
 @app.route('/adicionar_estoque', methods=['GET'])
@@ -118,16 +148,16 @@ def retirar():
 def usuarios():
 
     if request.method == 'POST':
-       nome = request.form.get('usuario')
+       usuario = request.form.get('usuario')
        senha = request.form.get('senha')
-       tipo = request.form.get('tipo', 'user')
+       funcao = request.form.get('funcao')
 
        try:
            conexao_bd = obter_conexao()
            cursor = conexao_bd.cursor()
 
-           comando = "INSERT INTO usuarios (nome, senha, funcao) VALUES (%s, %s, %s)"
-           valores = (nome, senha, funcao)
+           comando = "INSERT INTO usuarios (usuario, senha, funcao) VALUES (%s, %s, %s)"
+           valores = (usuario, senha, funcao)
            cursor.execute(comando, valores)
            conexao_bd.commit()
 
