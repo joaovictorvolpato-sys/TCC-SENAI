@@ -22,6 +22,9 @@ CREATE TABLE usuarios (
 INSERT INTO estoque(nome, categoria, funcao, quantidade, valor, foto)
 VALUES ('teste', 'teste', 'teste', 10, 10, 'linkdeteste') ; 
 
+INSERT INTO usuarios(usuario, senha, funcao)
+VALUES ('admin', '1234', 'admin') ;
+
 SELECT * FROM estoque;
 SELECT * FROM usuarios;
 DELETE FROM estoque 
