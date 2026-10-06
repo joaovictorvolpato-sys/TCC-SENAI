@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import mysql.connector
 
 app = Flask(__name__)
@@ -230,11 +230,198 @@ def conexao():
         user='root',
         password='',
         port=3306,
-        database='conexao'
+        database='almoxarifado'
     )
     conexao_teste.close()
     return render_template('login.html')
 
 
+
+
+
+#### rotaas api
+
+
+
+def conectar():
+    # Mesma conexão do exemplo. Se o seu MySQL usa a porta 3306, troque aqui.
+    return mysql.connector.connect(
+        host='localhost',
+        database='almoxarifado',
+        user='root',
+        password='',
+        port=3306
+    )
+ 
+ 
+# Qualquer erro de banco volta como JSON com status 500
+@app.errorhandler(mysql.connector.Error)
+def erro_banco(erro):
+    return jsonify({'erro': f'Erro no banco de dados: {erro}'}), 500
+ 
+ 
+# POST /api/login   -> {"username": "...", "password": "..."}
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    dados = request.get_json(silent=True) or request.form
+    usuario = dados.get('username')
+    senha = dados.get('password')
+ 
+    con = conectar()
+    cursor = con.cursor(dictionary=True)
+    cursor.execute("SELECT usuario, senha, funcao FROM usuarios WHERE usuario = %s", (usuario,))
+    encontrado = cursor.fetchone()
+    cursor.close()
+    con.close()
+ 
+    if encontrado is None or encontrado['senha'] != senha:
+        return jsonify({'erro': 'Usuário ou senha incorretos.'}), 401
+ 
+    return jsonify({'usuario': encontrado['usuario'], 'funcao': encontrado['funcao']}), 200
+ 
+ 
+# GET /api/estoque   -> lista todos os itens
+@app.route('/api/estoque', methods=['GET'])
+def api_listar_estoque():
+    con = conectar()
+    cursor = con.cursor(dictionary=True)
+    cursor.execute("SELECT id, nome, `preco` AS preco, quantidade, estoque_min, categoria, descricao, imagem FROM itens")
+    itens = cursor.fetchall()
+    cursor.close()
+    con.close()
+ 
+    for item in itens:
+        item['preco'] = float(item['preco'] or 0)
+ 
+    return jsonify(itens), 200
+ 
+ 
+# GET /api/estoque/<id>   -> um item
+@app.route('/api/estoque/<int:item_id>', methods=['GET'])
+def api_buscar_estoque(item_id):
+    con = conectar()
+    cursor = con.cursor(dictionary=True)
+    cursor.execute("SELECT id, nome, `preço` AS preco, quantidade, estoque_min, categoria, descricao, imagem FROM itens WHERE id = %s", (item_id,))
+    item = cursor.fetchone()
+    cursor.close()
+    con.close()
+ 
+    if item is None:
+        return jsonify({'erro': 'Item não encontrado.'}), 404
+ 
+    item['preco'] = float(item['preco'] or 0)
+    return jsonify(item), 200
+ 
+ 
+# POST /api/estoque   -> adiciona item (mesmos campos do exemplo)
+# {"nome", "preco", "quantidade", "quantidade_min", "categoria", "descricao", "imagem"}
+@app.route('/api/estoque', methods=['POST'])
+def api_adicionar_estoque():
+    dados = request.get_json(silent=True) or request.form
+ 
+    nome = dados.get('nome')
+    preco = dados.get('preco')
+    quantidade = dados.get('quantidade')
+    estoque_min = dados.get('quantidade_min')
+    categoria = dados.get('categoria')
+    descricao = dados.get('descricao')
+    funcao = dados.get('funcao')
+    imagem = dados.get('imagem')
+ 
+    if not nome or preco is None or quantidade is None:
+        return jsonify({'erro': 'Campos obrigatórios: nome, preco e quantidade.'}), 400
+ 
+    item = (nome, preco, quantidade, estoque_min, categoria, descricao, imagem)
+    query = "INSERT INTO itens (nome, `preco`, quantidade, estoque_min, categoria, descricao, imagem) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+ 
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(query, item)
+    con.commit()
+    novo_id = cursor.lastrowid
+    cursor.close()
+    con.close()
+ 
+    return jsonify({'mensagem': 'Item adicionado com sucesso.', 'id': novo_id}), 201
+ 
+ 
+# POST /api/estoque/movimentar   -> {"operacao": "Entrada" ou "Saida", "nome": "...", "quantidade": 5}
+@app.route('/api/estoque/movimentar', methods=['POST'])
+def api_movimentar_estoque():
+    dados = request.get_json(silent=True) or request.form
+ 
+    operacao = dados.get('operacao')
+    nome = dados.get('nome')
+    try:
+        quantidade = int(dados.get('quantidade'))
+    except (TypeError, ValueError):
+        quantidade = 0
+ 
+    if operacao not in ('Entrada', 'Saida') or not nome or quantidade <= 0:
+        return jsonify({'erro': "Informe operacao ('Entrada' ou 'Saida'), nome e quantidade maior que 0."}), 400
+ 
+    if operacao == 'Entrada':
+        query = "UPDATE itens SET quantidade = quantidade + %s WHERE nome = %s"
+        valores = (quantidade, nome)
+    else:
+        # só retira se houver quantidade suficiente
+        query = "UPDATE itens SET quantidade = quantidade - %s WHERE nome = %s AND quantidade >= %s"
+        valores = (quantidade, nome, quantidade)
+ 
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(query, valores)
+    con.commit()
+    linhas = cursor.rowcount
+    cursor.close()
+    con.close()
+ 
+    if linhas == 0:
+        return jsonify({'erro': 'Item não encontrado ou quantidade insuficiente.'}), 404
+ 
+    return jsonify({'mensagem': f'{operacao} registrada com sucesso.'}), 200
+ 
+ 
+# GET /api/usuarios   -> lista usuários (sem a senha)
+@app.route('/api/usuarios', methods=['GET'])
+def api_listar_usuarios():
+    con = conectar()
+    cursor = con.cursor(dictionary=True)
+    cursor.execute("SELECT usuario, funcao FROM usuarios")
+    lista = cursor.fetchall()
+    cursor.close()
+    con.close()
+ 
+    return jsonify(lista), 200
+ 
+ 
+# POST /api/usuarios   -> {"usuario": "...", "senha": "...", "funcao": "..."}
+@app.route('/api/usuarios', methods=['POST'])
+def api_cadastrar_usuario():
+    dados = request.get_json(silent=True) or request.form
+ 
+    usuario = dados.get('usuario')
+    senha = dados.get('senha')
+    funcao = dados.get('funcao')
+ 
+    if not usuario or not senha or not funcao:
+        return jsonify({'erro': 'Campos obrigatórios: usuario, senha e funcao.'}), 400
+ 
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute("SELECT 1 FROM usuarios WHERE usuario = %s", (usuario,))
+    if cursor.fetchone() is not None:
+        cursor.close()
+        con.close()
+        return jsonify({'erro': 'Esse usuário já existe.'}), 409
+ 
+    cursor.execute("INSERT INTO usuarios (usuario, senha, funcao) VALUES (%s, %s, %s)", (usuario, senha, funcao))
+    con.commit()
+    cursor.close()
+    con.close()
+ 
+    return jsonify({'mensagem': 'Usuário cadastrado com sucesso.'}), 201
+ 
+ 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
