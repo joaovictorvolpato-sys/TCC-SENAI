@@ -285,7 +285,7 @@ def api_login():
 def api_listar_estoque():
     con = conectar()
     cursor = con.cursor(dictionary=True)
-    cursor.execute("SELECT id, nome, `preco` AS preco, quantidade, estoque_min, categoria, descricao, imagem FROM itens")
+    cursor.execute("SELECT id, nome, `preco` AS preco, quantidade, estoque_min, categoria, funcao, descricao, imagem FROM itens")
     itens = cursor.fetchall()
     cursor.close()
     con.close()
@@ -297,11 +297,11 @@ def api_listar_estoque():
  
  
 # GET /api/estoque/<id>   -> um item
-@app.route('/api/estoque/<int:item_id>', methods=['GET'])
-def api_buscar_estoque(item_id):
+@app.route('/api/estoque/<int:estoque_id>', methods=['GET'])
+def api_buscar_estoque(estoque_id):
     con = conectar()
     cursor = con.cursor(dictionary=True)
-    cursor.execute("SELECT id, nome, `preço` AS preco, quantidade, estoque_min, categoria, descricao, imagem FROM itens WHERE id = %s", (item_id,))
+    cursor.execute("SELECT id, nome, `preço` AS preco, quantidade, estoque_min, categoria, funcao, descricao, imagem FROM itens WHERE id = %s", (estoque_id,))
     item = cursor.fetchone()
     cursor.close()
     con.close()
@@ -331,8 +331,8 @@ def api_adicionar_estoque():
     if not nome or preco is None or quantidade is None:
         return jsonify({'erro': 'Campos obrigatórios: nome, preco e quantidade.'}), 400
  
-    item = (nome, preco, quantidade, estoque_min, categoria, descricao, imagem)
-    query = "INSERT INTO itens (nome, `preco`, quantidade, estoque_min, categoria, descricao, imagem) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    item = (nome, preco, quantidade, estoque_min, categoria, funcao, descricao, imagem)
+    query = "INSERT INTO estoque (nome, `preco`, quantidade, estoque_min, categoria, funcao, descricao, imagem) VALUES (%s, %s, %s, %s, %s, %s, %s);"
  
     con = conectar()
     cursor = con.cursor()
