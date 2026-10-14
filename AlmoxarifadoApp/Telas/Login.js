@@ -13,7 +13,7 @@ import {
   StatusBar,
 } from 'react-native';
 
-const URL_LOGIN = 'http://192.168.56.1:5000/';
+import { API_URL } from '../config';
 
 export default function Login({ navigation }) {
   const [usuario, setUsuario] = useState('');
@@ -39,7 +39,7 @@ export default function Login({ navigation }) {
         password: senha,
       }).toString();
 
-      const resposta = await fetch(URL_LOGIN, {
+      const resposta = await fetch(API_URL + '/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: corpo,
@@ -49,7 +49,7 @@ export default function Login({ navigation }) {
       console.log('Status:', resposta.status);
 
       if (resposta.ok) {
-        navigation.navigate('Inicio');
+        navigation.navigate('Inicial');
       } else {
         Alert.alert('Erro', 'Usuário ou senha inválidos');
       }

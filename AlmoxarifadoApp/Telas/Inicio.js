@@ -8,66 +8,58 @@ import {
   ScrollView,
   StyleSheet,
   StatusBar,
-  SafeAreaView,
 } from 'react-native';
-
-// Troque pelo IP do seu servidor Flask (no iPhone, "localhost" não funciona)
-const URL_LOGIN = 'http://192.168.56.1:5000/';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { API_URL } from '../config';
 
 export default function Inicio({ navigation }) {
   const [itens, setItens] = useState([]);
   const [fotoAberta, setFotoAberta] = useState(null);
 
-  // Equivale ao {% for item in itens %} do Jinja:
-  // o Flask precisa ter uma rota /api/itens que devolva a lista em JSON
   useEffect(() => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+
     async function carregar() {
       try {
-        const resposta = await fetch(BASE_URL + '/api/itens');
-        const dados = await resposta.json();
-        setItens(dados);
+        const resposta = await fetch(API_URL + '/api/itens', {
+          signal: controller.signal,
+        });
+        if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
+        setItens(await resposta.json());
       } catch (e) {
-        console.log('Erro ao carregar itens:', e);
+        console.log('Erro ao carregar itens:', e.message);
+      } finally {
+        clearTimeout(timer);
       }
     }
+
     carregar();
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, []);
 
-  // Equivale ao mostrar_foto() com SweetAlert
   function mostrar_foto(caminho) {
-    console.log('Valor recebido:', caminho);
     setFotoAberta(caminho);
   }
 
   const cards = [
-    {
-      titulo: 'Adicionar Estoque',
-      texto: 'Inserir itens ao estoque.',
-      tela: 'AdicionarEstoque', // href="/adicionar_estoque"
-    },
-    {
-      titulo: 'Retirar Estoque',
-      texto: 'Registrar saídas do estoque.',
-      tela: 'Retirar', // href="/retirar"
-    },
-    {
-      titulo: 'Cadastrar Usuario',
-      texto: 'Cadastre um novo usuario.',
-      tela: 'Usuarios', // href="/usuarios"
-    },
+    { titulo: 'Adicionar Estoque', texto: 'Inserir itens ao estoque.', tela: 'adicionar' },
+    { titulo: 'Retirar Estoque', texto: 'Registrar saídas do estoque.', tela: 'Retirar' },
+    { titulo: 'Cadastrar Usuario', texto: 'Cadastre um novo usuario.', tela: 'Usuarios' },
   ];
 
   return (
     <SafeAreaView style={styles.corpo}>
       <StatusBar barStyle="light-content" />
       <ScrollView>
-        {/* Cabeçalho */}
         <View style={styles.cabecalho}>
           <Text style={styles.cabecalhoTitulo}>Sistema de Almoxarifado Senai</Text>
           <Text style={styles.cabecalhoTexto}>Controle de materiais e estoque</Text>
         </View>
 
-        {/* Cards */}
         <View style={styles.secaoCards}>
           {cards.map((card) => (
             <View key={card.tela} style={styles.card}>
@@ -83,7 +75,6 @@ export default function Inicio({ navigation }) {
           ))}
         </View>
 
-        {/* Tabela */}
         <ScrollView horizontal style={styles.caixaTabela}>
           <View style={styles.tabela}>
             <View style={styles.linhaCabecalho}>
@@ -108,7 +99,7 @@ export default function Inicio({ navigation }) {
                   {item.foto ? (
                     <TouchableOpacity
                       style={styles.btnFoto}
-                      onPress={() => mostrar_foto(BASE_URL + '/static/' + item.foto)}
+                      onPress={() => mostrar_foto(API_URL + '/static/' + item.foto)}
                     >
                       <Text style={styles.btnFotoTexto}>Foto</Text>
                     </TouchableOpacity>
@@ -122,7 +113,6 @@ export default function Inicio({ navigation }) {
         </ScrollView>
       </ScrollView>
 
-      {/* Popup da foto (substitui o Swal.fire) */}
       <Modal
         visible={fotoAberta !== null}
         transparent
@@ -151,31 +141,16 @@ export default function Inicio({ navigation }) {
 const AZUL = '#005583';
 
 const styles = StyleSheet.create({
-  corpo: {
-    flex: 1,
-    backgroundColor: '#F4F4F4',
-  },
+  corpo: { flex: 1, backgroundColor: '#F4F4F4' },
   cabecalho: {
     backgroundColor: AZUL,
     paddingVertical: 30,
     paddingHorizontal: 16,
     alignItems: 'center',
   },
-  cabecalhoTitulo: {
-    color: '#FFFFFF',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  cabecalhoTexto: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    marginTop: 10,
-  },
-  secaoCards: {
-    padding: 20,
-    alignItems: 'center',
-  },
+  cabecalhoTitulo: { color: '#FFFFFF', fontSize: 24, fontWeight: 'bold', textAlign: 'center' },
+  cabecalhoTexto: { color: '#FFFFFF', fontSize: 14, marginTop: 10 },
+  secaoCards: { padding: 20, alignItems: 'center' },
   card: {
     width: '100%',
     maxWidth: 420,
@@ -191,51 +166,20 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 3,
   },
-  cardTitulo: {
-    color: '#003F73',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 12,
-  },
-  cardTexto: {
-    color: '#555555',
-    fontSize: 15,
-    marginBottom: 24,
-  },
+  cardTitulo: { color: '#003F73', fontSize: 22, fontWeight: 'bold', marginBottom: 12 },
+  cardTexto: { color: '#555555', fontSize: 15, marginBottom: 24 },
   btn: {
     backgroundColor: AZUL,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 4,
   },
-  btnTexto: {
-    color: '#FFFFFF',
-    fontSize: 16,
-  },
-  caixaTabela: {
-    marginHorizontal: 10,
-    marginBottom: 30,
-  },
-  tabela: {
-    borderWidth: 1,
-    borderColor: AZUL,
-    backgroundColor: '#FFFFFF',
-  },
-  linhaCabecalho: {
-    flexDirection: 'row',
-    backgroundColor: AZUL,
-  },
-  linha: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: AZUL,
-  },
-  th: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 15,
-    padding: 10,
-  },
+  btnTexto: { color: '#FFFFFF', fontSize: 16 },
+  caixaTabela: { marginHorizontal: 10, marginBottom: 30 },
+  tabela: { borderWidth: 1, borderColor: AZUL, backgroundColor: '#FFFFFF' },
+  linhaCabecalho: { flexDirection: 'row', backgroundColor: AZUL },
+  linha: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: AZUL },
+  th: { color: '#FFFFFF', fontWeight: 'bold', fontSize: 15, padding: 10 },
   thLinha: {
     backgroundColor: AZUL,
     color: '#FFFFFF',
@@ -266,10 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     alignSelf: 'flex-start',
   },
-  btnFotoTexto: {
-    fontSize: 13,
-    color: '#000000',
-  },
+  btnFotoTexto: { fontSize: 13, color: '#000000' },
   modalFundo: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -285,9 +226,5 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
   },
-  modalImagem: {
-    width: '100%',
-    height: 300,
-    marginBottom: 20,
-  },
+  modalImagem: { width: '100%', height: 300, marginBottom: 20 },
 });

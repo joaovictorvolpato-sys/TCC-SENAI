@@ -6,7 +6,7 @@ app.secret_key = 'TCC_SENAI'
 
 def obter_conexao():
     return mysql.connector.connect(
-        host='localhost',
+        host='db',
         port=3306,
         user='root',
         password='',
@@ -423,5 +423,19 @@ def api_cadastrar_usuario():
     return jsonify({'mensagem': 'Usuário cadastrado com sucesso.'}), 201
  
  
+# GET /api/itens   -> lista usada pelo app (tabela estoque)
+@app.route('/api/itens', methods=['GET'])
+def api_itens():
+    con = conectar()
+    cursor = con.cursor(dictionary=True)
+    cursor.execute("SELECT id, nome, categoria, funcao, quantidade, valor, foto FROM estoque")
+    itens = cursor.fetchall()
+    cursor.close()
+    con.close()
+    for item in itens:
+        item['valor'] = float(item['valor'] or 0)
+    return jsonify(itens), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
