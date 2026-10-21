@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,38 +10,51 @@ import {
   StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { API_URL } from '../config';
 
 export default function Inicio({ navigation }) {
   const [itens, setItens] = useState([]);
   const [fotoAberta, setFotoAberta] = useState(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
+  // Busca a lista toda vez que a tela ganha foco (ex.: ao voltar de "Adicionar")
+  useFocusEffect(
+    useCallback(() => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
 
-    async function carregar() {
-      try {
-        const resposta = await fetch(API_URL + '/api/itens', {
-          signal: controller.signal,
-        });
-        if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
-        setItens(await resposta.json());
-      } catch (e) {
-        console.log('Erro ao carregar itens:', e.message);
-      } finally {
-        clearTimeout(timer);
+      async function carregar() {
+        try {
+          const resposta = await fetch(API_URL + '/api/itens', {
+            signal: controller.signal,
+          });
+          if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
+          const dados = await resposta.json();
+          console.log('Itens recebidos:', JSON.stringify(dados));
+          setItens(dados);
+        } catch (e) {
+          console.log('Erro ao carregar itens:', e.message);
+        } finally {
+          clearTimeout(timer);
+        }
       }
-    }
 
-    carregar();
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, []);
+      carregar();
+      return () => {
+        clearTimeout(timer);
+        controller.abort();
+      };
+    }, [])
+  );
+
+  // Monta a URL da foto, aceitando caminho com ou sem barra no início
+  function urlDaFoto(foto) {
+  const caminho = String(foto).replace(/^\/+/, '');
+  return API_URL + '/static/uploads/' + caminho;
+}
 
   function mostrar_foto(caminho) {
+    console.log('Abrindo foto:', caminho);
     setFotoAberta(caminho);
   }
 
@@ -99,7 +112,7 @@ export default function Inicio({ navigation }) {
                   {item.foto ? (
                     <TouchableOpacity
                       style={styles.btnFoto}
-                      onPress={() => mostrar_foto(API_URL + '/static/' + item.foto)}
+                      onPress={() => mostrar_foto(urlDaFoto(item.foto))}
                     >
                       <Text style={styles.btnFotoTexto}>Foto</Text>
                     </TouchableOpacity>
@@ -126,6 +139,9 @@ export default function Inicio({ navigation }) {
                 source={{ uri: fotoAberta }}
                 style={styles.modalImagem}
                 resizeMode="contain"
+                onError={(e) =>
+                  console.log('Erro ao carregar a foto:', e.nativeEvent.error)
+                }
               />
             )}
             <TouchableOpacity style={styles.btn} onPress={() => setFotoAberta(null)}>
