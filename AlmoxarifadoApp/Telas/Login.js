@@ -15,47 +15,56 @@ import {
 
 import { API_URL } from '../config';
 
+// Funções que o Flask trata como administrador (FUNCOES_ADMIN no app.py)
+const FUNCOES_ADMIN = ['administrador', 'admin'];
+
 export default function Login({ navigation }) {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
-
-  // Equivale ao toggleSenha() do HTML
   function toggleSenha() {
     setMostrarSenha(!mostrarSenha);
   }
-
-  // Equivale ao <form action="/" method="POST">
   async function entrar() {
-    console.log('Cliquei em Entrar');
+    if (!usuario.trim() || !senha) {
+      Alert.alert('Atenção', 'Informe o usuário e a senha');
+      return;
+    }
 
     // Se o servidor não responder em 5 segundos, cancela e mostra o erro
     const controle = new AbortController();
     const limite = setTimeout(() => controle.abort(), 5000);
 
     try {
-      const corpo = new URLSearchParams({
-        username: usuario,
-        password: senha,
-      }).toString();
-
-      const resposta = await fetch(API_URL + '/', {
+      const resposta = await fetch(API_URL + '/api/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: corpo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: usuario.trim(),
+          password: senha,
+        }),
         signal: controle.signal,
       });
       clearTimeout(limite);
       console.log('Status:', resposta.status);
 
-      if (resposta.ok) {
-        navigation.navigate('Inicial');
-      } else {
+      if (!resposta.ok) {
         Alert.alert('Erro', 'Usuário ou senha inválidos');
+        return;
       }
+
+      const dados = await resposta.json(); // { usuario, funcao }
+      console.log('Funcao recebida:', dados.funcao);
+
+      const ehAdmin = FUNCOES_ADMIN.includes(
+        String(dados.funcao).trim().toLowerCase()
+      );
+
+      // replace evita voltar para o login com o botão voltar
+      navigation.replace(ehAdmin ? 'Inicial' : 'inicio.usuario');
     } catch (e) {
       clearTimeout(limite);
-      console.log('Erro:', e);
+      console.log('Erro:', e.message);
       Alert.alert('Erro', 'Não foi possível conectar ao servidor');
     }
   }
@@ -119,10 +128,7 @@ export default function Login({ navigation }) {
 const AZUL = '#005583';
 
 const styles = StyleSheet.create({
-  corpo: {
-    flex: 1,
-    backgroundColor: AZUL,
-  },
+  corpo: { flex: 1, backgroundColor: AZUL },
   scroll: {
     flexGrow: 1,
     alignItems: 'center',
@@ -130,11 +136,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
-  imagem: {
-    width: 260,
-    height: 130,
-    marginBottom: 40,
-  },
+  imagem: { width: 260, height: 130, marginBottom: 40 },
   bloco: {
     width: '100%',
     maxWidth: 420,
@@ -143,12 +145,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
-  titulo: {
-    color: AZUL,
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
+  titulo: { color: AZUL, fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
   caixa: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -186,8 +183,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  entrarTexto: {
-    color: '#FFFFFF',
-    fontSize: 14,
-  },
+  entrarTexto: { color: '#FFFFFF', fontSize: 14 },
 });

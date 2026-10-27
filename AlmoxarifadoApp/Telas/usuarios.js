@@ -18,15 +18,16 @@ export default function Usuarios({ navigation }) {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [funcao, setFuncao] = useState('Usuario');
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function limparCampos() {
     setUsuario('');
     setSenha('');
     setConfirmarSenha('');
+    setFuncao('Usuario');
   }
 
-  // Equivale ao <form action="/cadastrar_usuario" method="POST">
   async function cadastrar() {
     if (!usuario.trim() || !senha) {
       Alert.alert('Atenção', 'Informe o usuário e a senha');
@@ -41,25 +42,29 @@ export default function Usuarios({ navigation }) {
     const limite = setTimeout(() => controle.abort(), 5000);
 
     try {
-      const corpo = new URLSearchParams({
-        username: usuario.trim(),
-        password: senha,
-      }).toString();
-
-      const resposta = await fetch(API_URL + '/cadastrar_usuario', {
+      const resposta = await fetch(API_URL + '/api/usuarios', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: corpo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          usuario: usuario.trim(),
+          senha: senha,
+          funcao: funcao,
+        }),
         signal: controle.signal,
       });
       clearTimeout(limite);
       console.log('Status:', resposta.status);
 
+      const dados = await resposta.json().catch(() => ({}));
+
       if (resposta.ok) {
         Alert.alert('Sucesso', 'Usuário cadastrado com sucesso');
         limparCampos();
       } else {
-        Alert.alert('Erro', 'Não foi possível cadastrar o usuário');
+        Alert.alert(
+          'Erro',
+          dados.erro || 'Não foi possível cadastrar o usuário (' + resposta.status + ')'
+        );
       }
     } catch (e) {
       clearTimeout(limite);
@@ -131,6 +136,26 @@ export default function Usuarios({ navigation }) {
             />
           </View>
 
+          <Text style={[styles.titulo, styles.espaco]}>Função</Text>
+          <View style={styles.seletor}>
+            {['Usuario', 'Administrador'].map((opcao) => (
+              <TouchableOpacity
+                key={opcao}
+                style={[styles.opcao, funcao === opcao && styles.opcaoAtiva]}
+                onPress={() => setFuncao(opcao)}
+              >
+                <Text
+                  style={[
+                    styles.opcaoTexto,
+                    funcao === opcao && styles.opcaoTextoAtivo,
+                  ]}
+                >
+                  {opcao === 'Usuario' ? 'Usuário' : 'Administrador'}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
           <TouchableOpacity style={styles.entrar} onPress={cadastrar}>
             <Text style={styles.entrarTexto}>Cadastrar</Text>
           </TouchableOpacity>
@@ -150,10 +175,7 @@ export default function Usuarios({ navigation }) {
 const AZUL = '#005583';
 
 const styles = StyleSheet.create({
-  corpo: {
-    flex: 1,
-    backgroundColor: AZUL,
-  },
+  corpo: { flex: 1, backgroundColor: AZUL },
   scroll: {
     flexGrow: 1,
     alignItems: 'center',
@@ -161,21 +183,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
-  cabecalho: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
+  cabecalho: { alignItems: 'center', marginBottom: 30 },
   cabecalhoTitulo: {
     color: '#FFFFFF',
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  cabecalhoSub: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    marginTop: 6,
-  },
+  cabecalhoSub: { color: '#FFFFFF', fontSize: 16, marginTop: 6 },
   bloco: {
     width: '100%',
     maxWidth: 420,
@@ -184,15 +199,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
-  titulo: {
-    color: AZUL,
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  espaco: {
-    marginTop: 20,
-  },
+  titulo: { color: AZUL, fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
+  espaco: { marginTop: 20 },
   caixa: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -218,6 +226,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F2F2',
     borderRadius: 3,
   },
+  seletor: { flexDirection: 'row', gap: 10 },
+  opcao: {
+    flex: 1,
+    height: 46,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#B8C7D6',
+    borderRadius: 6,
+    backgroundColor: '#EEF4FB',
+  },
+  opcaoAtiva: { backgroundColor: AZUL, borderColor: AZUL },
+  opcaoTexto: { color: AZUL, fontSize: 15 },
+  opcaoTextoAtivo: { color: '#FFFFFF', fontWeight: 'bold' },
   entrar: {
     alignSelf: 'center',
     marginTop: 30,
@@ -230,17 +252,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  entrarTexto: {
-    color: '#FFFFFF',
-    fontSize: 14,
-  },
-  voltar: {
-    alignSelf: 'center',
-    marginTop: 16,
-    padding: 8,
-  },
-  voltarTexto: {
-    color: AZUL,
-    fontSize: 15,
-  },
+  entrarTexto: { color: '#FFFFFF', fontSize: 14 },
+  voltar: { alignSelf: 'center', marginTop: 16, padding: 8 },
+  voltarTexto: { color: AZUL, fontSize: 15 },
 });
