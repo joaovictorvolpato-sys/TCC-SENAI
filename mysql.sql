@@ -18,6 +18,3 @@ CREATE TABLE IF NOT EXISTS usuarios (
     senha VARCHAR(255),
     funcao VARCHAR(50)
 );
-
-INSERT INTO usuarios (usuario, senha, funcao)
-VALUES ('admin', '1234', 'admin');
