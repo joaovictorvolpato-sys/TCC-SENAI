@@ -14,18 +14,23 @@ import {
 
 import { API_URL } from '../config';
 
+const OPCOES_FUNCAO = [
+  { value: 'usuario', rotulo: 'Usuário' },
+  { value: 'admin', rotulo: 'Administrador' },
+];
+
 export default function Usuarios({ navigation }) {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [funcao, setFuncao] = useState('Usuario');
+  const [funcao, setFuncao] = useState('usuario'); // CORRIGIDO: minúsculo, igual à API
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function limparCampos() {
     setUsuario('');
     setSenha('');
     setConfirmarSenha('');
-    setFuncao('Usuario');
+    setFuncao('usuario');
   }
 
   async function cadastrar() {
@@ -45,10 +50,11 @@ export default function Usuarios({ navigation }) {
       const resposta = await fetch(API_URL + '/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           usuario: usuario.trim(),
           senha: senha,
-          funcao: funcao,
+          funcao: funcao, // agora é 'usuario' ou 'admin'
         }),
         signal: controle.signal,
       });
@@ -138,19 +144,19 @@ export default function Usuarios({ navigation }) {
 
           <Text style={[styles.titulo, styles.espaco]}>Função</Text>
           <View style={styles.seletor}>
-            {['Usuario', 'Administrador'].map((opcao) => (
+            {OPCOES_FUNCAO.map((opcao) => (
               <TouchableOpacity
-                key={opcao}
-                style={[styles.opcao, funcao === opcao && styles.opcaoAtiva]}
-                onPress={() => setFuncao(opcao)}
+                key={opcao.value}
+                style={[styles.opcao, funcao === opcao.value && styles.opcaoAtiva]}
+                onPress={() => setFuncao(opcao.value)}
               >
                 <Text
                   style={[
                     styles.opcaoTexto,
-                    funcao === opcao && styles.opcaoTextoAtivo,
+                    funcao === opcao.value && styles.opcaoTextoAtivo,
                   ]}
                 >
-                  {opcao === 'Usuario' ? 'Usuário' : 'Administrador'}
+                  {opcao.rotulo}
                 </Text>
               </TouchableOpacity>
             ))}
